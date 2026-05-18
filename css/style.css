@@ -1,0 +1,316 @@
+@font-face {
+  font-family: 'TTLakes';
+  src: url('./fonts/TTLakes-Regular.woff2') format('woff2'),
+       url('./fonts/TTLakes-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(145deg, #e9eef3 0%, #dbe1e8 100%);
+    font-family: 'TTLakes', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.services-card {
+    max-width: 1320px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+    padding: 32px 28px;
+}
+
+.services-title {
+    font-weight: 700;
+    font-size: 10px;
+    color: #0a2540;
+    margin-bottom: 24px;
+    padding-left: 20px;
+}
+
+@media (max-width: 640px) {
+    .services-card {
+        padding: 24px 18px;
+    }
+    .services-title {
+        font-size: 1.5rem;
+        padding-left: 14px;
+    }
+}
+
+/* ========= СЕТКА ДЛЯ ДЕСКТОПА ========= */
+.brands-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+/* Стиль кнопки бренда - адаптивная ширина */
+.brand-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafd;
+    border-radius: 60px;
+    padding: 8px 12px 8px 16px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #1e2f3e;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid #e2e9f0;
+    gap: 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ===== ЕДИНЫЙ РАЗМЕР КАРТИНОК ДЛЯ ВСЕХ ЭКРАНОВ ===== */
+.brand-icon {
+    width: 108px;   /* Фиксированная ширина */
+    height: 32px;  /* Фиксированная высота */
+    object-fit: contain; /* Сохраняем пропорции */
+}
+
+/* Левая часть: иконка + текст */
+.brand-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Белый кружок с красной обводкой */
+.brand-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #e31e24;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.brand-arrow svg {
+    width: 12px;
+    height: 12px;
+    display: block;
+}
+
+.brand-arrow svg path {
+    stroke: #e31e24;
+    fill: none;
+    stroke-width: 1.5;
+}
+
+.brand-link:hover {
+    background: #ffffff;
+    border-color: #cbdde9;
+    transform: translateY(-1px);
+}
+
+.brand-link:hover .brand-arrow {
+    transform: scale(1.05);
+    background: #fff5f5;
+}
+
+/* Кнопка показать все/скрыть */
+.toggle-btn {
+    background: transparent;
+    border: 1.5px solid #cfdfed;
+    padding: 10px 32px;
+    border-radius: 40px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c6e9e;
+    cursor: pointer;
+    background-color: #fefefe;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.toggle-btn:hover {
+    background-color: #f0f6fe;
+    border-color: #8fb4d0;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 6px;
+}
+
+.brand-link.hidden-item {
+    display: none !important;
+}
+
+/* ========= МОБИЛЬНЫЙ СЛАЙДЕР (до 768px) ========= */
+@media (max-width: 768px) {
+    .brands-grid.desktop-grid {
+        display: none !important;
+    }
+
+    .mobile-slider-container {
+        display: block;
+        width: 100%;
+        margin-bottom: 28px;
+    }
+
+    .slider-track {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 8px 4px 12px 4px;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .slider-track::-webkit-scrollbar {
+        height: 3px;
+    }
+    
+    .slider-track::-webkit-scrollbar-track {
+        background: #e7edf3;
+        border-radius: 8px;
+    }
+    
+    .slider-track::-webkit-scrollbar-thumb {
+        background: #b9cfdf;
+        border-radius: 8px;
+    }
+
+    .slider-item {
+        flex: 0 0 auto;
+        background: #f8fafd;
+        border-radius: 48px;
+        padding: 8px 12px 8px 16px;
+        border: 1px solid #e2e9f0;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #1e2f3e;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .slider-item:active {
+        background: #eef3fc;
+        transform: scale(0.98);
+    }
+    
+    .slider-item-content {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    /* ===== МОБИЛЬНЫЕ КАРТИНКИ - ТОТ ЖЕ РАЗМЕР ===== */
+    .brand-icon-mobile {
+        width: 108px;   /* Такой же размер как на десктопе */
+        height: 32px;  /* Такой же размер как на десктопе */
+        object-fit: contain;
+    }
+    
+    /* Стрелка в мобильной версии */
+    .slider-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e31e24;
+        flex-shrink: 0;
+    }
+    
+    .slider-arrow svg {
+        width: 12px;
+        height: 12px;
+        display: block;
+    }
+    
+    .slider-arrow svg path {
+        stroke: #e31e24;
+        fill: none;
+        stroke-width: 1.5;
+    }
+}
+
+/* ========= ПЛАНШЕТЫ (769px - 1024px) ========= */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .brands-grid {
+        gap: 12px;
+    }
+    
+    .brand-link {
+        padding: 8px 12px 8px 16px;
+        font-size: 0.9rem;
+    }
+    
+    /* Картинки остаются того же размера - 28px */
+    .brand-icon {
+        width: 108px;
+        height: 32px;
+    }
+    
+    .brand-arrow {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* ========= БОЛЬШИЕ ЭКРАНЫ (1025px+) ========= */
+@media (min-width: 1025px) {
+    .brand-link {
+        padding: 10px 16px 10px 20px;
+        font-size: 1rem;
+    }
+    
+    /* Картинки остаются того же размера - 28px */
+    .brand-icon {
+        width: 108px;
+        height: 32px;
+    }
+    
+    .brand-arrow {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .brand-arrow svg {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .brands-grid {
+        gap: 16px;
+    }
+}
+
+/* Скрываем мобильный слайдер на десктопе */
+@media (min-width: 769px) {
+    .mobile-slider-container {
+        display: none !important;
+    }
+    .brands-grid.desktop-grid {
+        display: flex !important;
+    }
+}
