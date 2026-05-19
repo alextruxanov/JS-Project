@@ -10,15 +10,21 @@
     <div class="services-card">
         <h2 class="services-title">РЕМОНТ ТЕХНИКИ РАЗЛИЧНЫХ БРЕНДОВ</h2>
 
-        <!-- Десктопная/планшетная сетка -->
+        <!-- Десктопная сетка -->
         <div class="brands-grid desktop-grid" id="desktopBrandsGrid"></div>
 
         <!-- Мобильный слайдер -->
         <div class="mobile-slider-container" id="mobileSliderContainer">
-            <div class="slider-track" id="sliderTrack"></div>
+            <div class="slider-wrapper">
+                <div class="slider-track" id="sliderTrack">
+                    <!-- Слайды будут добавляться через JS -->
+                </div>
+            </div>
+            <!-- Пагинация (кружочки) -->
+            <div class="slider-pagination" id="sliderPagination"></div>
         </div>
 
-        <!-- Кнопка переключения -->
+        <!-- Кнопка переключения (видна на всех разрешениях) -->
         <div class="button-wrapper">
             <button class="toggle-btn" id="toggleBtn">Показать все</button>
         </div>
