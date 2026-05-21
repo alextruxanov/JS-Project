@@ -17,13 +17,15 @@ const fullBrandsList = [
 let isExpanded = false;
 let currentLimit = 6;  // По умолчанию 6 брендов (2 строки по 3)
 
-const brandsGrid = document.getElementById('brandsGrid');
+const desktopGrid = document.getElementById('desktopBrandsGrid');
+const sliderTrack = document.getElementById('sliderTrack');
+const sliderPagination = document.getElementById('sliderPagination');
 const toggleBtn = document.getElementById('toggleBtn');
 
 // Функция: сколько брендов показывать в ЗАКРЫТОМ состоянии (в зависимости от ширины)
 function getLimitByWidth() {
     const width = window.innerWidth;
-    // до 768px - 6 брендов (2 строки по 3)
+    // до 768px - 6 брендов (слайдер)
     if (width <= 768) return 6;
     // от 769px до 1119px - 6 брендов (2 строки по 3)
     if (width <= 1119) return 6;
@@ -38,8 +40,8 @@ function getArrowSVG() {
     </svg>`;
 }
 
-// Создание элемента бренда
-function createBrandElement(brand) {
+// ========= ДЕСКТОПНЫЕ ЭЛЕМЕНТЫ =========
+function createDesktopBrandElement(brand) {
     const link = document.createElement('a');
     link.className = 'brand-link';
     link.href = '#';
@@ -72,30 +74,23 @@ function createBrandElement(brand) {
     return link;
 }
 
-// Отрисовка сетки (создаем все элементы один раз)
-function renderGrid() {
-    if (!brandsGrid) return;
-    brandsGrid.innerHTML = '';
+function renderDesktopGrid() {
+    if (!desktopGrid) return;
+    desktopGrid.innerHTML = '';
     
     fullBrandsList.forEach(brand => {
-        const element = createBrandElement(brand);
-        brandsGrid.appendChild(element);
+        const element = createDesktopBrandElement(brand);
+        desktopGrid.appendChild(element);
     });
     
-    updateVisibility();
+    updateDesktopVisibility();
 }
 
-// Обновление видимости (показываем/скрываем бренды)
-function updateVisibility() {
-    // Сколько брендов показываем
-    let visibleCount;
-    if (isExpanded) {
-        visibleCount = fullBrandsList.length;  // РАСКРЫТО: все 11 брендов
-    } else {
-        visibleCount = currentLimit;            // ЗАКРЫТО: по лимиту (6 или 8)
-    }
+function updateDesktopVisibility() {
+    if (!desktopGrid) return;
     
-    const allBrands = brandsGrid.querySelectorAll('.brand-link');
+    const visibleCount = isExpanded ? fullBrandsList.length : currentLimit;
+    const allBrands = desktopGrid.querySelectorAll('.brand-link');
     
     allBrands.forEach((brand, index) => {
         if (index < visibleCount) {
@@ -105,30 +100,157 @@ function updateVisibility() {
         }
     });
     
-    // Обновляем текст кнопки
     toggleBtn.textContent = isExpanded ? 'Скрыть' : 'Показать все';
 }
 
-// Обновление лимита при ресайзе
+// ========= МОБИЛЬНЫЙ СЛАЙДЕР =========
+let currentSlideIndex = 0;
+
+function createMobileSlide(brand, index) {
+    const slide = document.createElement('div');
+    slide.className = 'slider-item';
+    slide.dataset.index = index;
+    
+    const leftPart = document.createElement('span');
+    leftPart.className = 'slider-item-content';
+    
+    const img = document.createElement('img');
+    img.src = brand.img;
+    img.alt = brand.name;
+    img.className = 'brand-icon-mobile';
+    img.onerror = () => { img.style.display = 'none'; };
+    
+    const text = document.createTextNode(brand.name);
+    leftPart.appendChild(img);
+    leftPart.appendChild(text);
+    
+    const arrow = document.createElement('span');
+    arrow.className = 'slider-arrow';
+    arrow.innerHTML = getArrowSVG();
+    
+    slide.appendChild(leftPart);
+    slide.appendChild(arrow);
+    
+    slide.addEventListener('click', () => {
+        console.log(`Выбран бренд: ${brand.name}`);
+    });
+    
+    return slide;
+}
+
+function createPagination(slidesCount) {
+    if (!sliderPagination) return;
+    sliderPagination.innerHTML = '';
+    
+    for (let i = 0; i < slidesCount; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'pagination-dot';
+        if (i === currentSlideIndex) {
+            dot.classList.add('active');
+        }
+        dot.addEventListener('click', () => {
+            goToSlide(i);
+        });
+        sliderPagination.appendChild(dot);
+    }
+}
+
+function goToSlide(index) {
+    const slides = sliderTrack.querySelectorAll('.slider-item');
+    if (slides.length === 0) return;
+    
+    if (index < 0) index = 0;
+    if (index >= slides.length) index = slides.length - 1;
+    
+    currentSlideIndex = index;
+    
+    slides[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+    });
+    
+    updatePaginationActive();
+}
+
+function updatePaginationActive() {
+    const dots = sliderPagination.querySelectorAll('.pagination-dot');
+    dots.forEach((dot, i) => {
+        if (i === currentSlideIndex) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+function setupScrollObserver() {
+    if (!sliderTrack) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = parseInt(entry.target.dataset.index);
+                if (!isNaN(index) && index !== currentSlideIndex) {
+                    currentSlideIndex = index;
+                    updatePaginationActive();
+                }
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const slides = sliderTrack.querySelectorAll('.slider-item');
+    slides.forEach(slide => observer.observe(slide));
+}
+
+function renderMobileSlider() {
+    if (!sliderTrack) return;
+    sliderTrack.innerHTML = '';
+    
+    const visibleCount = isExpanded ? fullBrandsList.length : currentLimit;
+    const brandsToShow = fullBrandsList.slice(0, visibleCount);
+    
+    brandsToShow.forEach((brand, index) => {
+        const slide = createMobileSlide(brand, index);
+        sliderTrack.appendChild(slide);
+    });
+    
+    createPagination(brandsToShow.length);
+    currentSlideIndex = 0;
+    
+    setTimeout(() => {
+        setupScrollObserver();
+    }, 100);
+    
+    toggleBtn.textContent = isExpanded ? 'Скрыть' : 'Показать все';
+}
+
+// ========= ОБЩИЕ ФУНКЦИИ =========
+function updateUI() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        renderMobileSlider();
+    } else {
+        updateDesktopVisibility();
+    }
+}
+
 function updateLimit() {
     const newLimit = getLimitByWidth();
     
     if (newLimit !== currentLimit) {
         currentLimit = newLimit;
         
-        // Если не в режиме "показать все" - обновляем отображение
         if (!isExpanded) {
-            updateVisibility();
+            updateUI();
         }
     }
 }
 
-// Обработчик кнопки "Показать все / Скрыть"
 function onToggleClick() {
-    // Переключаем состояние
     isExpanded = !isExpanded;
-    // Обновляем видимость
-    updateVisibility();
+    updateUI();
     
     console.log('Кнопка нажата, isExpanded:', isExpanded);
     console.log('Видно брендов:', isExpanded ? fullBrandsList.length : currentLimit);
@@ -140,6 +262,7 @@ function onWindowResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
         updateLimit();
+        updateUI();
     }, 150);
 }
 
@@ -148,7 +271,8 @@ function init() {
     currentLimit = getLimitByWidth();
     isExpanded = false;
     
-    renderGrid();
+    renderDesktopGrid();
+    renderMobileSlider();
     
     toggleBtn.addEventListener('click', onToggleClick);
     window.addEventListener('resize', onWindowResize);

@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'TTLakes';
+  src: url('./fonts/TTLakes-Regular.woff2') format('woff2'),
+       url('./fonts/TTLakes-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +13,7 @@
 
 body {
     background: linear-gradient(145deg, #e9eef3 0%, #dbe1e8 100%);
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'TTLakes', Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +22,7 @@ body {
 }
 
 .services-card {
-    max-width: 1200px;
+    max-width: 1320px;
     width: 100%;
     background-color: #ffffff;
     border-radius: 32px;
@@ -41,10 +48,9 @@ body {
     }
 }
 
-/* ========= СЕТКА БРЕНДОВ ========= */
-.brands-grid {
+/* ========= ДЕСКТОПНАЯ СЕТКА ========= */
+.brands-grid.desktop-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 28px;
 }
@@ -140,17 +146,148 @@ body {
     margin-top: 6px;
 }
 
+/* ========= МОБИЛЬНЫЙ СЛАЙДЕР ========= */
+.mobile-slider-container {
+    display: none;
+    width: 100%;
+    margin-bottom: 28px;
+}
+
+.slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 48px;
+}
+
+.slider-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.slider-track::-webkit-scrollbar {
+    display: none;
+}
+
+.slider-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    background: #f8fafd;
+    border-radius: 48px;
+    padding: 20px 24px;
+    border: 1px solid #e2e9f0;
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: #1e2f3e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.slider-item:active {
+    background: #eef3fc;
+    transform: scale(0.98);
+}
+
+.slider-item-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon-mobile {
+    width: 108px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.slider-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #e31e24;
+    flex-shrink: 0;
+}
+
+.slider-arrow svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.slider-arrow svg path {
+    fill: #e31e24;
+}
+
+/* Пагинация (кружочки) */
+.slider-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbdde9;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pagination-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: #e31e24;
+}
+
+.pagination-dot:hover {
+    background: #e31e24;
+    opacity: 0.7;
+}
+
 /* ===== АДАПТИВ ===== */
 
-/* Планшеты (до 768px) - 2 колонки */
+/* Мобильные устройства (до 768px) - показываем слайдер, скрываем сетку */
 @media (max-width: 768px) {
-    .brands-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+    .brands-grid.desktop-grid {
+        display: none !important;
+    }
+    .mobile-slider-container {
+        display: block !important;
+    }
+}
+
+/* Десктоп (от 769px) - показываем сетку, скрываем слайдер */
+@media (min-width: 769px) {
+    .mobile-slider-container {
+        display: none !important;
+    }
+    .brands-grid.desktop-grid {
+        display: grid !important;
+    }
+}
+
+/* Десктоп сетка - 3 колонки (769px - 1119px) */
+@media (min-width: 769px) and (max-width: 1119px) {
+    .brands-grid.desktop-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
     }
     .brand-link {
         padding: 10px 16px;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
     .brand-icon {
         width: 108px;
@@ -160,31 +297,11 @@ body {
         width: 26px;
         height: 26px;
     }
-    .brand-arrow svg {
-        width: 11px;
-        height: 11px;
-    }
 }
 
-/* Мобильные (до 480px) - 1 колонка */
-@media (max-width: 480px) {
-    .brands-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    .brand-link {
-        padding: 10px 16px;
-        font-size: 0.9rem;
-    }
-    .toggle-btn {
-        padding: 8px 24px;
-        font-size: 0.85rem;
-    }
-}
-
-/* Для разрешения 1120px и выше - 4 колонки */
+/* Десктоп сетка - 4 колонки (от 1120px) */
 @media (min-width: 1120px) {
-    .brands-grid {
+    .brands-grid.desktop-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 16px;
     }
@@ -200,8 +317,31 @@ body {
         width: 28px;
         height: 28px;
     }
-    .brand-arrow svg {
-        width: 12px;
-        height: 12px;
+}
+
+/* Очень маленькие мобильные (до 380px) - уменьшаем отступы */
+@media (max-width: 380px) {
+    .slider-item {
+        padding: 16px 20px;
+        font-size: 1rem;
+    }
+    .brand-icon-mobile {
+        width: 108px;
+        height: 32px;
+    }
+    .slider-arrow {
+        width: 32px;
+        height: 32px;
+    }
+    .slider-arrow svg {
+        width: 14px;
+        height: 14px;
+    }
+    .slider-pagination {
+        gap: 8px;
+        margin-top: 16px;
+    }
+    .pagination-dot.active {
+        width: 20px;
     }
 }
