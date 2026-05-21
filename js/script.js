@@ -1,4 +1,4 @@
-// СПИСОК ВСЕХ БРЕНДОВ
+// СПИСОК ВСЕХ БРЕНДОВ (11 брендов)
 const fullBrandsList = [
     { name: "", img: "img/lenovo.png" },
     { name: "", img: "img/bosch.png" },
@@ -15,19 +15,19 @@ const fullBrandsList = [
 
 // Глобальные переменные
 let isExpanded = false;
-let currentLimit = 8;
-let currentSlideIndex = 0;
+let currentLimit = 6;  // По умолчанию 6 брендов (2 строки по 3)
 
-const desktopGrid = document.getElementById('desktopBrandsGrid');
-const sliderTrack = document.getElementById('sliderTrack');
-const sliderPagination = document.getElementById('sliderPagination');
+const brandsGrid = document.getElementById('brandsGrid');
 const toggleBtn = document.getElementById('toggleBtn');
 
-// Функция: сколько брендов показывать в зависимости от ширины экрана
+// Функция: сколько брендов показывать в ЗАКРЫТОМ состоянии (в зависимости от ширины)
 function getLimitByWidth() {
     const width = window.innerWidth;
-    if (width <= 320) return 1;
+    // до 768px - 6 брендов (2 строки по 3)
     if (width <= 768) return 6;
+    // от 769px до 1119px - 6 брендов (2 строки по 3)
+    if (width <= 1119) return 6;
+    // от 1120px и выше - 8 брендов (2 строки по 4)
     return 8;
 }
 
@@ -38,8 +38,8 @@ function getArrowSVG() {
     </svg>`;
 }
 
-// Создание элемента бренда для десктопа
-function createDesktopBrandElement(brand) {
+// Создание элемента бренда
+function createBrandElement(brand) {
     const link = document.createElement('a');
     link.className = 'brand-link';
     link.href = '#';
@@ -72,174 +72,41 @@ function createDesktopBrandElement(brand) {
     return link;
 }
 
-// Создание слайда для мобильного слайдера
-function createMobileSlide(brand, index) {
-    const slide = document.createElement('div');
-    slide.className = 'slider-item';
-    slide.dataset.index = index;
+// Отрисовка сетки (создаем все элементы один раз)
+function renderGrid() {
+    if (!brandsGrid) return;
+    brandsGrid.innerHTML = '';
     
-    const leftPart = document.createElement('span');
-    leftPart.className = 'slider-item-content';
-    
-    const img = document.createElement('img');
-    img.src = brand.img;
-    img.alt = brand.name;
-    img.className = 'brand-icon-mobile';
-    img.onerror = () => { img.style.display = 'none'; };
-    
-    const text = document.createTextNode(brand.name);
-    leftPart.appendChild(img);
-    leftPart.appendChild(text);
-    
-    const arrow = document.createElement('span');
-    arrow.className = 'slider-arrow';
-    arrow.innerHTML = getArrowSVG();
-    
-    slide.appendChild(leftPart);
-    slide.appendChild(arrow);
-    
-    slide.addEventListener('click', () => {
-        console.log(`Выбран бренд: ${brand.name}`);
+    fullBrandsList.forEach(brand => {
+        const element = createBrandElement(brand);
+        brandsGrid.appendChild(element);
     });
     
-    return slide;
+    updateVisibility();
 }
 
-// Создание пагинации (кружочки)
-function createPagination(slidesCount) {
-    sliderPagination.innerHTML = '';
-    
-    for (let i = 0; i < slidesCount; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'pagination-dot';
-        if (i === currentSlideIndex) {
-            dot.classList.add('active');
-        }
-        dot.addEventListener('click', () => {
-            goToSlide(i);
-        });
-        sliderPagination.appendChild(dot);
+// Обновление видимости (показываем/скрываем бренды)
+function updateVisibility() {
+    // Сколько брендов показываем
+    let visibleCount;
+    if (isExpanded) {
+        visibleCount = fullBrandsList.length;  // РАСКРЫТО: все 11 брендов
+    } else {
+        visibleCount = currentLimit;            // ЗАКРЫТО: по лимиту (6 или 8)
     }
-}
-
-// Переход к определенному слайду
-function goToSlide(index) {
-    const slides = sliderTrack.querySelectorAll('.slider-item');
-    if (slides.length === 0) return;
     
-    if (index < 0) index = 0;
-    if (index >= slides.length) index = slides.length - 1;
-    
-    currentSlideIndex = index;
-    
-    // Прокручиваем к нужному слайду
-    slides[index].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'start'
-    });
-    
-    // Обновляем активные точки пагинации
-    updatePaginationActive();
-}
-
-// Обновление активной точки пагинации
-function updatePaginationActive() {
-    const dots = sliderPagination.querySelectorAll('.pagination-dot');
-    dots.forEach((dot, i) => {
-        if (i === currentSlideIndex) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
-    });
-}
-
-// Отслеживание текущего слайда при скролле
-function setupScrollObserver() {
-    if (!sliderTrack) return;
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const index = parseInt(entry.target.dataset.index);
-                if (!isNaN(index) && index !== currentSlideIndex) {
-                    currentSlideIndex = index;
-                    updatePaginationActive();
-                }
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    const slides = sliderTrack.querySelectorAll('.slider-item');
-    slides.forEach(slide => observer.observe(slide));
-}
-
-// Отрисовка десктопной сетки
-function renderDesktopGrid() {
-    if (!desktopGrid) return;
-    desktopGrid.innerHTML = '';
-    
-    const visibleCount = isExpanded ? fullBrandsList.length : currentLimit;
-    
-    fullBrandsList.forEach((brand, index) => {
-        const element = createDesktopBrandElement(brand);
-        if (index >= visibleCount) {
-            element.style.display = 'none';
-        }
-        desktopGrid.appendChild(element);
-    });
-}
-
-// Отрисовка мобильного слайдера
-function renderMobileSlider() {
-    if (!sliderTrack) return;
-    sliderTrack.innerHTML = '';
-    
-    const visibleCount = isExpanded ? fullBrandsList.length : currentLimit;
-    const brandsToShow = fullBrandsList.slice(0, visibleCount);
-    
-    brandsToShow.forEach((brand, index) => {
-        const slide = createMobileSlide(brand, index);
-        sliderTrack.appendChild(slide);
-    });
-    
-    // Создаем пагинацию
-    createPagination(brandsToShow.length);
-    currentSlideIndex = 0;
-    
-    // Настраиваем отслеживание скролла
-    setTimeout(() => {
-        setupScrollObserver();
-    }, 100);
-}
-
-// Обновление видимости (для десктопа)
-function updateDesktopVisibility() {
-    if (!desktopGrid) return;
-    
-    const visibleCount = isExpanded ? fullBrandsList.length : currentLimit;
-    const allBrands = desktopGrid.querySelectorAll('.brand-link');
+    const allBrands = brandsGrid.querySelectorAll('.brand-link');
     
     allBrands.forEach((brand, index) => {
         if (index < visibleCount) {
-            brand.style.display = 'inline-flex';
+            brand.style.display = 'flex';
         } else {
             brand.style.display = 'none';
         }
     });
-}
-
-// Обновление UI в зависимости от типа устройства
-function updateUI() {
-    const isMobile = window.innerWidth <= 768;
-    toggleBtn.textContent = isExpanded ? 'Скрыть' : 'Показать все';
     
-    if (isMobile) {
-        renderMobileSlider();
-    } else {
-        updateDesktopVisibility();
-    }
+    // Обновляем текст кнопки
+    toggleBtn.textContent = isExpanded ? 'Скрыть' : 'Показать все';
 }
 
 // Обновление лимита при ресайзе
@@ -249,21 +116,22 @@ function updateLimit() {
     if (newLimit !== currentLimit) {
         currentLimit = newLimit;
         
+        // Если не в режиме "показать все" - обновляем отображение
         if (!isExpanded) {
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                renderMobileSlider();
-            } else {
-                updateDesktopVisibility();
-            }
+            updateVisibility();
         }
     }
 }
 
-// Обработчик кнопки
+// Обработчик кнопки "Показать все / Скрыть"
 function onToggleClick() {
+    // Переключаем состояние
     isExpanded = !isExpanded;
-    updateUI();
+    // Обновляем видимость
+    updateVisibility();
+    
+    console.log('Кнопка нажата, isExpanded:', isExpanded);
+    console.log('Видно брендов:', isExpanded ? fullBrandsList.length : currentLimit);
 }
 
 // Обработчик ресайза
@@ -280,16 +148,15 @@ function init() {
     currentLimit = getLimitByWidth();
     isExpanded = false;
     
-    renderDesktopGrid();
-    renderMobileSlider();
-    toggleBtn.textContent = 'Показать все';
+    renderGrid();
     
     toggleBtn.addEventListener('click', onToggleClick);
     window.addEventListener('resize', onWindowResize);
     
     console.log('Инициализация завершена');
     console.log('Ширина экрана:', window.innerWidth);
-    console.log('Лимит брендов:', currentLimit);
+    console.log('Лимит брендов (закрыто):', currentLimit);
+    console.log('Всего брендов:', fullBrandsList.length);
 }
 
 document.addEventListener('DOMContentLoaded', init);

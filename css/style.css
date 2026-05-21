@@ -15,7 +15,7 @@ body {
 }
 
 .services-card {
-    max-width: 1320px;
+    max-width: 1200px;
     width: 100%;
     background-color: #ffffff;
     border-radius: 32px;
@@ -36,35 +36,35 @@ body {
         padding: 24px 18px;
     }
     .services-title {
-        font-size: 10px;
+        font-size: 1.5rem;
         padding-left: 14px;
     }
 }
 
-/* ========= ДЕСКТОПНАЯ СЕТКА ========= */
-.brands-grid.desktop-grid {
-    display: flex;
-    flex-wrap: wrap;
+/* ========= СЕТКА БРЕНДОВ ========= */
+.brands-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 28px;
 }
 
-/* Стиль кнопки бренда */
 .brand-link {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     background: #f8fafd;
     border-radius: 60px;
-    padding: 8px 12px 8px 16px;
+    padding: 12px 20px;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #1e2f3e;
     text-decoration: none;
     transition: all 0.2s;
     border: 1px solid #e2e9f0;
     gap: 10px;
     cursor: pointer;
+    width: 100%;
 }
 
 .brand-content {
@@ -105,7 +105,8 @@ body {
 .brand-link:hover {
     background: #ffffff;
     border-color: #cbdde9;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .brand-link:hover .brand-arrow {
@@ -139,161 +140,68 @@ body {
     margin-top: 6px;
 }
 
-/* ========= МОБИЛЬНЫЙ СЛАЙДЕР ========= */
-.mobile-slider-container {
-    display: none;
-    width: 100%;
-    margin-bottom: 28px;
-}
-
-.slider-wrapper {
-    position: relative;
-    overflow: hidden;
-    border-radius: 48px;
-}
-
-.slider-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.slider-track::-webkit-scrollbar {
-    display: none;
-}
-
-/* Слайд */
-.slider-item {
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-    background: #f8fafd;
-    border-radius: 48px;
-    padding: 16px 20px;
-    border: 1px solid #e2e9f0;
-    font-weight: 500;
-    font-size: 1.1rem;
-    color: #1e2f3e;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.slider-item:active {
-    background: #eef3fc;
-    transform: scale(0.98);
-}
-
-.slider-item-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.brand-icon-mobile {
-    width: 108px;
-    height: 32px;
-    object-fit: contain;
-}
-
-.slider-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: white;
-    border: 2px solid #e31e24;
-    flex-shrink: 0;
-}
-
-.slider-arrow svg {
-    width: 14px;
-    height: 14px;
-    display: block;
-}
-
-.slider-arrow svg path {
-    fill: #e31e24;
-}
-
-/* Пагинация (кружочки) */
-.slider-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 16px;
-}
-
-.pagination-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbdde9;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.pagination-dot.active {
-    width: 20px;
-    border-radius: 4px;
-    background: #e31e24;
-}
-
-.pagination-dot:hover {
-    background: #e31e24;
-    opacity: 0.7;
-}
-
 /* ===== АДАПТИВ ===== */
 
-/* Мобильные устройства (до 768px) - показываем слайдер, скрываем сетку */
+/* Планшеты (до 768px) - 2 колонки */
 @media (max-width: 768px) {
-    .brands-grid.desktop-grid {
-        display: none !important;
-    }
-    
-    .mobile-slider-container {
-        display: block !important;
-    }
-}
-
-/* Десктоп (от 769px) - показываем сетку, скрываем слайдер */
-@media (min-width: 769px) {
-    .mobile-slider-container {
-        display: none !important;
-    }
-    
-    .brands-grid.desktop-grid {
-        display: flex !important;
-    }
-}
-
-/* Адаптив для планшетов */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .brands-grid.desktop-grid {
+    .brands-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
     .brand-link {
-        padding: 8px 12px 8px 16px;
+        padding: 10px 16px;
         font-size: 0.9rem;
+    }
+    .brand-icon {
+        width: 108px;
+        height: 32px;
+    }
+    .brand-arrow {
+        width: 26px;
+        height: 26px;
+    }
+    .brand-arrow svg {
+        width: 11px;
+        height: 11px;
     }
 }
 
-/* Адаптив для больших экранов */
-@media (min-width: 1025px) {
+/* Мобильные (до 480px) - 1 колонка */
+@media (max-width: 480px) {
+    .brands-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
     .brand-link {
-        padding: 10px 16px 10px 20px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    .toggle-btn {
+        padding: 8px 24px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Для разрешения 1120px и выше - 4 колонки */
+@media (min-width: 1120px) {
+    .brands-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+    .brand-link {
+        padding: 12px 20px;
         font-size: 1rem;
     }
-    .brands-grid.desktop-grid {
-        gap: 16px;
+    .brand-icon {
+        width: 108px;
+        height: 32px;
+    }
+    .brand-arrow {
+        width: 28px;
+        height: 28px;
+    }
+    .brand-arrow svg {
+        width: 12px;
+        height: 12px;
     }
 }
